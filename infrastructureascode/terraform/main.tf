@@ -1,4 +1,4 @@
-# Azure Provider tanımlaması
+# Azure Provider tanımlamasi
 provider "azurerm" {
   features {}
 
