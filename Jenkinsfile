@@ -1,38 +1,53 @@
-
 pipeline {
-	agent any
-  environment {
-    DOCKERHUB_CREDENTIALS = credentials('dockerhub')
-  }
-  stages {
-  	
-    stage('Docker Build') {
-    	agent any
-      steps {
-      	sh 'docker build -t helloworld:latest .'
-      }
+    agent any
+
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('docker-hub-credentials') 
+        IMAGE_NAME = 'onuromertunc/rdjenkins' 
     }
 
-    stage('Login') {
-      steps {
-        sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin 192.168.1.170:6161'
-      }
-    }
-    
-     stage('tag') {
-      steps {
-        sh 'docker tag helloworld 192.168.1.170:6161/helloworld:latest'
-      }
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh "docker build -t ${IMAGE_NAME} ."
+                }
+            }
+        }
+
+        stage('Login to Docker Hub') {
+            steps {
+                script {
+                    // Docker Hub'a giriş yap
+                    sh """
+                    echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin
+                    """
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    // Docker imajını Docker Hub'a push et
+                    sh "docker push ${IMAGE_NAME}"
+                }
+            }
+        }
     }
 
-    stage('Push') {
-      steps {
-        sh 'docker push 192.168.1.170:6161/helloworld:latest'
-      }
+    post {
+        always {
+            script {
+                // Docker login oturumunu kapat
+                sh "docker logout"
+            }
+        }
     }
-
-     
-      }
-    }
-  
-  
+}
