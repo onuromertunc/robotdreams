@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('docker-hub-credentials') 
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub') 
         IMAGE_NAME = 'onuromertunc/rdjenkins' 
     }
 
