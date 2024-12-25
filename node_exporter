@@ -6,6 +6,18 @@ cd node_exporter-1.6.1.linux-amd64
 #Service dosyasi olustur.
 sudo vi /etc/systemd/system/node_exporter.service
 
+[Unit]
+Description=Node Exporter
+After=network.target
+
+[Service]
+User=root
+ExecStart=/root/nodeexporter/node_exporter
+
+[Install]
+WantedBy=default.target
+
+
 #service etkinlestirip, baslat.
 sudo systemctl daemon-reload
 sudo systemctl enable node_exporter
