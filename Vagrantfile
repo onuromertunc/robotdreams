@@ -1,6 +1,6 @@
 Vagrant.configure("2") do |config|
 
-  config.vm.define "elk_server" do |mon|
+  config.vm.define "mon_server" do |mon|
     mon.vm.box = "ubuntu/bionic64"
     mon.vm.hostname = "mon-server"
     mon.vm.network "public_network", ip: "192.168.1.83", bridge: "Realtek PCIe GbE Family Controller"
@@ -73,8 +73,20 @@ Vagrant.configure("2") do |config|
       sudo systemctl enable prometheus
       sudo systemctl start prometheus
 
+      # Grafana Kurulumu
+      sudo apt update
+      sudo apt install -y software-properties-common
+      sudo add-apt-repository "deb https://packages.grafana.com/oss/deb stable main"
+      wget -q -O - https://packages.grafana.com/gpg.key | sudo apt-key add -
+      sudo apt update
+      sudo apt install -y grafana
+
+      # Grafana Servisini Başlatma
+      sudo systemctl enable grafana-server
+      sudo systemctl start grafana-server
+
       # Kurulum Tamamlandı Mesajı
-      echo "Prometheus kurulumu tamamlandı."
+      echo "Prometheus ve Grafana kurulumu tamamlandı."
     SHELL
   end
 end
