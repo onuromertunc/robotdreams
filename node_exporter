@@ -1,0 +1,19 @@
+wget https://github.com/prometheus/node_exporter/releases/download/v1.6.1/node_exporter-1.6.1.linux-amd64.tar.gz
+tar xvfz node_exporter-1.6.1.linux-amd64.tar.gz
+cd node_exporter-1.6.1.linux-amd64
+./node_exporter &
+
+#Service dosyasi olustur.
+sudo vi /etc/systemd/system/node_exporter.service
+
+#service etkinlestirip, baslat.
+sudo systemctl daemon-reload
+sudo systemctl enable node_exporter
+sudo systemctl start node_exporter
+
+#prometheus.yaml dosyasini düzenle.
+  - job_name: 'node_exporter'
+    static_configs:
+      - targets:
+        - '192.168.1.48:9100'
+        - '192.168.1.49:9100'
