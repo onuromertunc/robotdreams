@@ -27,3 +27,5 @@ subjects:
   - kind: ServiceAccount
     name: prometheus
     namespace: default
+
+#kubectl config view --flatten --minify > prometheus-kubeconfig.yaml
