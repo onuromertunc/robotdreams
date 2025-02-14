@@ -12,3 +12,25 @@ spec:
       port: 80
       targetPort: 8080
   type: ClusterIP
+
+#NodePort
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nodeport-service
+spec:
+  type: NodePort
+  selector:
+    app: my-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+      nodePort: 30003
+#Örnek 
+kubectl run robotdreams --image=onuromertunc/rd-helloworld:671
+kubectl expose pod  robotdreams --type=NodePort --port=7000
+kubectl describe svc robotdreams
+kubectl get nodes -o wide
+curl http://172.30.2.2:32404
