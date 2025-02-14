@@ -13,8 +13,7 @@ spec:
       targetPort: 8080
   type: ClusterIP
 
-#NodePort
-
+#NodePort Declerative
 apiVersion: v1
 kind: Service
 metadata:
@@ -28,7 +27,8 @@ spec:
       port: 80
       targetPort: 8080
       nodePort: 30003
-#Örnek 
+
+#Örnek Imperative
 kubectl run robotdreams --image=onuromertunc/rd-helloworld:671
 kubectl expose pod  robotdreams --type=NodePort --port=7000
 kubectl describe svc robotdreams
