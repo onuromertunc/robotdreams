@@ -1,0 +1,66 @@
+#Ortam kurulumu 2 pod ve 2 service oluşturulması
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devops-nginx
+  template:
+    metadata:
+      labels:
+        app: devops-nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          command: ["/bin/sh", "-c"]
+          args:
+            - echo 'BURASI DEVOPS!' > /usr/share/nginx/html/index.html && nginx -g 'daemon off;'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iletisim-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iletisim-nginx
+  template:
+    metadata:
+      labels:
+        app: iletisim-nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          command: ["/bin/sh", "-c"]
+          args:
+            - echo 'BURASI İLETİŞİM SAYFASI' > /usr/share/nginx/html/index.html && nginx -g 'daemon off;'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: devops-service
+spec:
+  selector:
+    app: devops-nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: iletisim-service
+spec:
+  selector:
+    app: iletisim-nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
