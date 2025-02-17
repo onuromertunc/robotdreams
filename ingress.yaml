@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: robotdreams-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: robotdreams.com
+      http:
+        paths:
+          - path: /devops
+            pathType: Prefix
+            backend:
+              service:
+                name: devops-service
+                port:
+                  number: 80
+          - path: /iletisim
+            pathType: Prefix
+            backend:
+              service:
+                name: iletisim-service
+                port:
+                  number: 80
