@@ -1,0 +1,14 @@
+kubectl create deployment nginx-deployment --image=nginx --replicas=3
+kubectl get pods -o wide
+kubectl expose deployment nginx-deployment --type=ClusterIP --port=80
+kubectl get endpoints nginx-deployment
+
+
+kubectl exec -it $(kubectl get pod -l app=nginx-deployment -o jsonpath="{.items[0].metadata.name}") -- sh -c "echo 'pod1' > /usr/share/nginx/html/index.html"
+kubectl exec -it $(kubectl get pod -l app=nginx-deployment -o jsonpath="{.items[1].metadata.name}") -- sh -c "echo 'pod2' > /usr/share/nginx/html/index.html"
+kubectl exec -it $(kubectl get pod -l app=nginx-deployment -o jsonpath="{.items[2].metadata.name}") -- sh -c "echo 'pod3' > /usr/share/nginx/html/index.html"
+
+
+kubectl run test-curl --image=radial/busyboxplus:curl -it --rm -- /bin/sh
+
+while true; do curl -s nginx-deployment; sleep 1; done
