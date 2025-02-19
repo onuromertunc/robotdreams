@@ -1,1 +1,30 @@
 
+mkdir /opt/etcd-backup
+
+ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key snapshot save /opt/etcd-backup/etcdbackfile
+
+ETCDCTL_API=3 etcdctl --data-dir /var/etcd-new  --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key snapshot restore /opt/etcd-backup/etcdbackfile
+
+#Tüm podları sil
+kubectl delete pods --all
+
+#ETCD Durdurmak için, static podların taşınması için path oluşturdum ve taşıdım.
+mkdir /tmp/staticpod
+mv /etc/kubernetes/manifests/* /tmp/staticpod/
+
+#Kubeapi server kontrol ediyorum.
+kubectl get pods
+The connection to the server 172.30.1.2:6443 was refused - did you specify the right host or port?
+
+#Change path 3 directory - /var/etcd-new
+vi /tmp/staticpod/etcd.yaml
+
+- --data-dir=/var/etcd-new
+- mountPath: /var/etcd-new
+ - hostPath: path: /var/etcd-new
+
+#Kubelet servisini restart ettim.
+systemctl restart kubelet.service
+
+#Static pod'ları tekrar geriye yükledim.
+mv /tmp/staticpod/* /etc/kubernetes/manifests/
