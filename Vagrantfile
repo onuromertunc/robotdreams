@@ -1,3 +1,4 @@
+#Minikube Kurulumu İcindir
 Vagrant.configure("2") do |config|
 
  
