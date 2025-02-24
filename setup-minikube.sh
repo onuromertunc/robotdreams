@@ -1,5 +1,6 @@
-#!/bin/bash
 
+#!/bin/bash
+#Minikube Kurulumu İcindir
 # Docker ve gerekli araçların yüklenmesi
 sudo apt-get update
 sudo ufw disable
