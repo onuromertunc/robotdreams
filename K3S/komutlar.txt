@@ -1,0 +1,32 @@
+---K3S Kurulumu-----
+curl -sfL https://get.k3s.io | sh -s - server --node-ip=192.168.1.48 --bind-address=192.168.1.48 --advertise-address=192.168.1.48
+
+--node-ip=192.168.1.48: Master node'un IP adresini sabitler.
+--bind-address=192.168.1.48: API server'ın hangi IP adresine bağlanacağını belirtir.
+--advertise-address=192.168.1.48: Cluster'ın diğer node'lara bu IP adresi üzerinden iletişim
+
+Kurulum tamamlandığında, token'ı görüntülemek için şu komutu çalıştırabilirsiniz: (Agent makinesinde çalışacak)
+cat /var/lib/rancher/k3s/server/node-token
+
+curl -sfL https://get.k3s.io | K3S_URL=https://192.168.1.48:6443 K3S_TOKEN=<NODE_TOKEN> sh -s - agent --node-ip=192.168.1.49
+
+
+
+Kubernetes Otomatik Tamamlayıcı
+
+echo 'source <(kubectl completion bash)' >> ~/.bashrc
+source ~/.bashrc
+
+
+Kubeconfig : sudo cat /etc/rancher/k3s/k3s.yaml
+
+
+
+K3S Kaldırma
+----
+K3s Master'dan Uninstall
+/usr/local/bin/k3s-uninstall.sh
+
+
+K3s Agent'den Uninstall
+/usr/local/bin/k3s-agent-uninstall.sh
