@@ -57,11 +57,6 @@ sudo apt install ufw fail2ban htop nmap -y
 sudo apt install openssh-server -y
 
 
-echo "=============9. K3S INSTALL============="
-#curl -sfL https://get.k3s.io | sh -s - server --node-ip=192.168.1.48 --bind-address=192.168.1.48 --advertise-address=192.168.1.48
-
-
-
 echo "=============10. HELM Install-AutoCompletek3s============="
 curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 echo 'source <(kubectl completion bash)' >> ~/.bashrc
