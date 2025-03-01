@@ -64,8 +64,7 @@ done
 #Canary tag olan podlarin html sayfalarini degistir.
 kubectl exec -it $(kubectl get pod -l app=nginx,version=canary -o jsonpath="{.items[0].metadata.name}") -- sh -c "echo '<h1>Canary Version</h1>' > /usr/share/nginx/html/index.html"
 
-#Test et
+#Curl ile test et
 kubectl run curlpod --image=radial/busyboxplus:curl -i --tty
 while true; do curl -s http://nginx-service:80; echo ""; sleep 1; done
-
 
