@@ -1,0 +1,16 @@
+
+replicaCount: 1
+
+image:
+  repository: onuromertunc/rd-helloworld
+
+  pullPolicy: IfNotPresent
+
+  tag: "671"
+
+
+service:
+
+  type: NodePort
+  port: 80
+
