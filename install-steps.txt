@@ -18,3 +18,12 @@ sudo systemctl start jenkins
 sudo systemctl enable jenkins
 sudo systemctl status jenkins
 
+#Kurulum sonrasi
+sudo usermod -aG docker jenkins
+sudo systemctl restart jenkins
+sudo systemctl restart docker
+sudo chmod 666 /var/run/docker.sock
+
+
+#Admin Pass
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
