@@ -1,27 +1,43 @@
-wget https://github.com/prometheus/node_exporter/releases/download/v1.6.1/node_exporter-1.6.1.linux-amd64.tar.gz
-tar xvfz node_exporter-1.6.1.linux-amd64.tar.gz
-cd node_exporter-1.6.1.linux-amd64
-./node_exporter &
+#1. Node Exporter'ı İndir
+cd /tmp
+curl -LO https://github.com/prometheus/node_exporter/releases/download/v1.6.1/node_exporter-1.6.1.linux-amd64.tar.gz
 
-#Service dosyasi olustur.
-sudo vi /etc/systemd/system/node_exporter.service
+#2. Arşivi Çıkar ve Binary'yi Taşı
+tar xvf node_exporter-1.6.1.linux-amd64.tar.gz
+sudo mv node_exporter-1.6.1.linux-amd64/node_exporter /usr/local/bin/
+ls -l /usr/local/bin/node_exporter
+rm -rf node_exporter-1.6.1.linux-amd64 node_exporter-1.6.1.linux-amd64.tar.gz
+
+#3. Node Exporter için Sistem Kullanıcısı Oluştur
+sudo useradd -rs /bin/false node_exporter
+
+#4. Node Exporter için Systemd Servisi Oluştur
+vi /etc/systemd/system/node_exporter.service
 
 [Unit]
 Description=Node Exporter
-After=network.target
+Wants=network-online.target
+After=network-online.target
 
 [Service]
-User=root
-ExecStart=/root/nodeexporter/node_exporter
+User=node_exporter
+Group=node_exporter
+Type=simple
+ExecStart=/usr/local/bin/node_exporter --collector.systemd --collector.cpu --collector.meminfo --collector.loadavg
 
 [Install]
-WantedBy=default.target
+WantedBy=multi-user.target
 
-
-#service etkinlestirip, baslat.
+#5. Servisi Başlat ve Otomatik Başlatmaya Ekle
 sudo systemctl daemon-reload
 sudo systemctl enable node_exporter
 sudo systemctl start node_exporter
+
+sudo systemctl status node_exporter
+curl http://localhost:9100/metrics
+
+
+
 
 #prometheus.yaml dosyasini düzenle.
   - job_name: 'node_exporter'
