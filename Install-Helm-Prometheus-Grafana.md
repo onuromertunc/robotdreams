@@ -55,6 +55,8 @@ Eğer bağlantı başarılı olursa "Data source is working" mesajını görmeli
 
 Veya prometheus'uda nodeport ile dışarıya açın > http://192.168.1.49:31951/ bunun gibi bir ip adresiyle olmalı
 
+kubectl patch svc prometheus-stack-kube-prom-prometheus -n monitoring -p '{"spec": {"type": "NodePort"}}'
+
 
 ---
 
